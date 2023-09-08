@@ -95,11 +95,7 @@ namespace LYA1_Lexico
                     buffer += c;
                     archivo.Read();
                 }
-            }else if (c == '#')
-            {
-                setClasificacion(Tipos.Identificador);
             }
-
             else if (c == ';')
             {
                 setClasificacion(Tipos.FinSentencia);
