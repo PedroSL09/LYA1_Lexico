@@ -17,11 +17,11 @@
 + = OperadorTermino
 -- = IncrementoTermino
 - = OperadorTermino
-# = FinSentencia
+# = Identificador
 radioDeLaCircunferencia = Identificador
 = = Asignacion
 45 = Numero
-; = Caracter
+; = FinSentencia
 ! = OperadorLogico
 && = OperadorLogico
 || = OperadorLogico
