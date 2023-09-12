@@ -1,6 +1,6 @@
 
-
-
+"hola mundo"
+H
 +-
 -+
 **=
@@ -9,7 +9,7 @@
         =====
         12345
         +++---#
-        radioDeLaCircunferencia=45;
+        
         !&&||
         <<
         >>

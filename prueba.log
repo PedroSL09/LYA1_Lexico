@@ -1,3 +1,5 @@
+"hl ud = Cadena
+H = Caracter
 + = OperadorTermino
 - = OperadorTermino
 - = OperadorTermino
@@ -17,11 +19,7 @@
 + = OperadorTermino
 -- = IncrementoTermino
 - = OperadorTermino
-# = Identificador
-radioDeLaCircunferencia = Identificador
-= = Asignacion
-45 = Numero
-; = FinSentencia
+# = Caracter
 ! = OperadorLogico
 && = OperadorLogico
 || = OperadorLogico

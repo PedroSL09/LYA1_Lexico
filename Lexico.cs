@@ -38,20 +38,7 @@ namespace LYA1_Lexico
 
             buffer += c;
 
-            if (char.IsLetter(c))
-            {
-
-                setClasificacion(Tipos.Identificador);
-                while (char.IsLetterOrDigit(c = (char)archivo.Peek()))
-                {
-
-                    buffer += c;
-                    archivo.Read();
-
-                }
-
-            }
-            else if (char.IsDigit(c))
+            if (char.IsDigit(c))
             {
 
                 setClasificacion(Tipos.Numero);
@@ -169,6 +156,20 @@ namespace LYA1_Lexico
                     archivo.Read();
                 }
 
+            }
+            else if (c == '"')
+            {
+
+                
+                setClasificacion(Tipos.Cadena);
+                while ((c = (char)archivo.Read()) != '"')             
+               {
+
+                    buffer += c;
+                    archivo.Read();
+
+                }
+            
             }
             else
             {
