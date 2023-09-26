@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace LYA1_Lexico
+namespace LYA1_Lexico2
 {
     public class Lexico : Token, IDisposable
     {
@@ -14,11 +14,13 @@ namespace LYA1_Lexico
         {
             archivo = new StreamReader("prueba.cpp");
             log = new StreamWriter("prueba.log");
+            log.AutoFlush = true;
         }
         public Lexico(string nombre)
         {
             archivo = new StreamReader(nombre);
             log = new StreamWriter("prueba.log");
+            log.AutoFlush = true;
         }
         public void Dispose()
         {
@@ -27,160 +29,195 @@ namespace LYA1_Lexico
         }
         public void nextToken()
         {
-
             char c;
-
             string buffer = "";
-            while (char.IsWhiteSpace(c = (char)archivo.Read()))
+
+            int estado = 0;
+
+            const int F = -1;
+            const int E = -2;
+
+            while (estado >= 0)
             {
-
-            }
-
-            buffer += c;
-
-            if (char.IsDigit(c))
-            {
-
-                setClasificacion(Tipos.Numero);
-                while (char.IsDigit(c = (char)archivo.Peek()))
+                c = (char)archivo.Peek();
+                switch (estado)
                 {
-
-                    buffer += c;
-                    archivo.Read();
-
+                    case 0:
+                        if (char.IsWhiteSpace(c))
+                            estado = 0;
+                        else if (char.IsLetter(c))
+                            estado = 1;
+                        else if (char.IsDigit(c))
+                            estado = 2;
+                        else if(c == ';')
+                            estado = 8;
+                        else if (c == '&')
+                            estado = 9;
+                        else if(c == '|')
+                            estado = 11;
+                        else if(c == '<')
+                            estado = 12;
+                        else if(c == '>')
+                            estado = 13;
+                        else if(c == '!')
+                            estado = 15;
+                        else if(c == '=')
+                            estado = 16;
+                        else if(c == '+')
+                            estado = 17;
+                        else if(c == '-')
+                            estado = 19;
+                        else
+                            estado = 26;
+                        break;
+                    case 1:
+                        setClasificacion(Tipos.Identificador);
+                        if (!char.IsLetterOrDigit(c))
+                            estado = F;
+                        break;
+                    case 2:
+                        setClasificacion(Tipos.Numero);
+                        if (char.IsDigit(c))
+                            estado = 2;
+                        else if (c == '.')
+                            estado = 3;
+                        else if (char.ToLower(c) == 'e')
+                            estado = 5;
+                        else
+                            estado = F;
+                        break;
+                    case 3:
+                        if (char.IsDigit(c))
+                            estado = 4;
+                        else
+                            estado = E;
+                        break;
+                    case 4:
+                        if (char.IsDigit(c))
+                            estado = 4;
+                        else if (char.ToLower(c) == 'e')
+                            estado = 5;
+                        else
+                            estado = F;
+                        break;
+                    case 5:
+                        if (char.IsDigit(c))
+                            estado = 7;
+                        else if (c == '+' || c == '-')
+                            estado = 6;
+                        else
+                            estado = E;
+                        break;
+                    case 6:
+                        if (char.IsDigit(c))
+                            estado = 7;
+                        else
+                            estado = E;
+                        break;
+                    case 7:
+                        if (!char.IsDigit(c))
+                            estado = F;
+                        break;
+                    case 8:
+                        setClasificacion(Tipos.FinSentencia);
+                        estado = F;
+                        break;
+                    case 9:
+                        setClasificacion(Tipos.Caracter);
+                        if (c == '&'){
+                            estado = 10;
+                        }else{
+                            estado = F;
+                        }                        
+                        break;
+                    case 10:
+                        setClasificacion(Tipos.OpLogico);
+                        estado = F;
+                        break; 
+                    case 11:
+                        setClasificacion(Tipos.Caracter);
+                        if (c == '|'){
+                            estado = 10;
+                        }else{
+                            estado = F;
+                        } 
+                        break;   
+                    case 12:
+                        setClasificacion(Tipos.OpRelacional);
+                        if(c == '>'||c == '='){
+                            estado = 14;
+                        }else{
+                            estado = F;
+                        }
+                        break;
+                    case 13:
+                        setClasificacion(Tipos.OpRelacional);
+                            if(c == '='){
+                                estado = 14;
+                            }else{
+                                estado = F;
+                            }
+                        break;
+                    case 14:
+                        setClasificacion(Tipos.OpRelacional);
+                        estado = F;
+                        break;
+                    case 15:
+                        setClasificacion(Tipos.OpLogico);
+                        if(c == '='){
+                            estado = 14;
+                        }else{
+                            estado = F;
+                        }
+                        break;
+                    case 16:
+                        setClasificacion(Tipos.OpAsignacion);
+                        if(c == '='){
+                            estado = 14;
+                        }else{
+                            estado = F;
+                        }
+                        break;
+                    case 17:
+                        setClasificacion(Tipos.OpTermino);
+                            if(c == '='||c == '+'){
+                                estado = 18;
+                            }else{
+                                estado = F;
+                            }
+                        break;
+                    case 18:
+                        setClasificacion(Tipos.IncrementoTermino);
+                        estado = F;
+                        break;
+                    case 19:
+                        setClasificacion(Tipos.OpTermino);
+                        if(c == '='||c == '-'){
+                                estado = 20;
+                            }else{
+                                estado = F;
+                            }
+                        break;
+                    case 20:
+                        setClasificacion(Tipos.IncrementoTermino);
+                        estado = F;
+                        break;
+                    case 26:
+                        setClasificacion(Tipos.Caracter);
+                        estado = F;
+                        break;
                 }
-            }
-
-            else if (c == '=')
-            {
-                setClasificacion(Tipos.Asignacion);
-                if ((c = (char)archivo.Peek()) == '='||c == '<'||c == '>')
+                if (estado >= 0)
                 {
-                    setClasificacion(Tipos.OperadorRelacional);
-                    buffer += c;
+                    if (estado > 0)
+                    {
+                        buffer += c;    
+                    }
                     archivo.Read();
                 }
             }
-
-            else if (c == '-')
-            {
-                setClasificacion(Tipos.OperadorTermino);
-                if ((c = (char)archivo.Peek()) == '-' || c == '=')
-                {
-                    setClasificacion(Tipos.IncrementoTermino);
-                    buffer += c;
-                    archivo.Read();
-                }
-            }
-
-            else if (c == '+')
-            {
-                setClasificacion(Tipos.OperadorTermino);
-                if ((c = (char)archivo.Peek()) == '+' || c == '=')
-                {
-                    setClasificacion(Tipos.IncrementoTermino);
-                    buffer += c;
-                    archivo.Read();
-                }
-            }
-            else if (c == ';')
-            {
-                setClasificacion(Tipos.FinSentencia);
-            }
-            else if (c == '{')
-            {
-
-                setClasificacion(Tipos.Inicio);
-
-            }
-            else if (c == '}')
-            {
-
-                setClasificacion(Tipos.Fin);
-
-            }
-            else if(c == '*' || c == '/' || c == '%'){
-
-                setClasificacion(Tipos.OperadorFactor);
-                if ((c = (char)archivo.Peek()) == '=')
-                {
-                    setClasificacion(Tipos.IncrementoFactor);
-                    buffer += c;
-                    archivo.Read();
-                }
-            }
-            else if(c == '&')
-            {
-
-                setClasificacion(Tipos.Caracter);
-                if ((c = (char)archivo.Peek()) == '&')
-                {
-                    setClasificacion(Tipos.OperadorLogico);
-                    buffer += c;
-                    archivo.Read();
-                }
-
-            }
-            else if(c == '|')
-            {
-
-                setClasificacion(Tipos.Caracter);
-                if ((c = (char)archivo.Peek()) == '|')
-                {
-                    setClasificacion(Tipos.OperadorLogico);
-                    buffer += c;
-                    archivo.Read();
-                }
-
-            }
-            else if (c == '!')
-            {
-
-                setClasificacion(Tipos.OperadorLogico);
-                if ((c = (char)archivo.Peek()) == '=')
-                {
-                    setClasificacion(Tipos.OperadorRelacional);
-                    buffer += c;
-                    archivo.Read();
-                }
-
-            }
-            else if (c == '<'||c == '>')
-            {
-
-                setClasificacion(Tipos.OperadorRelacional);
-                if ((c = (char)archivo.Peek()) == '=')
-                {
-                    setClasificacion(Tipos.OperadorRelacional);
-                    buffer += c;
-                    archivo.Read();
-                }
-
-            }
-            else if (c == '"')
-            {
-
-                
-                setClasificacion(Tipos.Cadena);
-                while ((c = (char)archivo.Read()) != '"')             
-               {
-
-                    buffer += c;
-                    archivo.Read();
-
-                }
-            
-            }
-            else
-            {
-
-                setClasificacion(Tipos.Caracter);
-
-            }
-
             setContenido(buffer);
             log.WriteLine(getContenido() + " = " + getClasificacion());
-
         }
         public bool FinArchivo()
         {

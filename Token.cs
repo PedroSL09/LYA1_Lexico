@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LYA1_Lexico
+namespace LYA1_Lexico2
 {
     public class Token
     {
         public enum Tipos
         {
-            Identificador,Numero,Caracter,Asignacion,FinSentencia,
-            OperadorRelacional, OperadorLogico, OperadorTermino, OperadorFactor,
-            IncrementoTermino, IncrementoFactor,
-            Inicio, Fin,
-            Cadena
+            Identificador,Numero,Caracter, OpAsignacion, FinSentencia,
+            OpLogico, OpRelacional, OpTermino, IncrementoTermino
         }
         private string contenido;
         private Tipos  clasificacion;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LYA1_Lexico
+namespace LYA1_Lexico2
 {
     class Program
     {
