@@ -22,22 +22,17 @@ x26 = Identificador
 - = OpTermino
 += = IncrementoTermino
 -= = IncrementoTermino
-* = Caracter
-/ = Caracter
-* = Caracter
-= = OpAsignacion
-/ = Caracter
-= = OpAsignacion
-% = Caracter
-% = Caracter
-= = OpAsignacion
-? = Caracter
-" = Caracter
-" = Caracter
-" = Caracter
-Hola = Identificador
-mundo = Identificador
-" = Caracter
-{ = Caracter
-} = Caracter
-" = Caracter
+* = OpFactor
+/ = OpFactor
+*= = IncrementoFactor
+/= = IncrementoFactor
+% = OpFactor
+%= = IncrementoFactor
+? = OpTernario
+" = Cadena
+"
+ = Cadena
+"Hola mundo = Cadena
+"
+{}
+ = Cadena

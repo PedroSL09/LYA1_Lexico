@@ -67,6 +67,12 @@ namespace LYA1_Lexico2
                             estado = 17;
                         else if(c == '-')
                             estado = 19;
+                        else if(c == '/'||c == '*'||c == '%')
+                            estado = 21;
+                        else if(c == '?')
+                            estado = 23;
+                        else if(c == '"')
+                            estado = 24;
                         else
                             estado = 26;
                         break;
@@ -201,6 +207,30 @@ namespace LYA1_Lexico2
                     case 20:
                         setClasificacion(Tipos.IncrementoTermino);
                         estado = F;
+                        break;
+                    case 21:
+                        setClasificacion(Tipos.OpFactor);
+                        if(c == '='){
+                            estado = 22;
+                        }else{
+                            estado = F;
+                        }
+                        break;
+                    case 22:
+                        setClasificacion(Tipos.IncrementoFactor);
+                        estado = F;
+                        break;
+                    case 23:
+                        setClasificacion(Tipos.OpTernario);
+                        estado = F;
+                        break;
+                    case 24:
+                        setClasificacion(Tipos.Cadena);
+                        if (c == '"'){
+                            estado = F;
+                        }else{
+                            estado = 24;
+                        }
                         break;
                     case 26:
                         setClasificacion(Tipos.Caracter);
