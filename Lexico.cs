@@ -49,32 +49,32 @@ namespace LYA1_Lexico2
                             estado = 1;
                         else if (char.IsDigit(c))
                             estado = 2;
-                        else if (c == ';')
-                            estado = 8;
-                        else if (c == '&')
-                            estado = 9;
-                        else if (c == '|')
-                            estado = 11;
-                        else if (c == '<')
-                            estado = 12;
-                        else if (c == '>')
-                            estado = 13;
-                        else if (c == '!')
-                            estado = 15;
                         else if (c == '=')
+                            estado = 8;
+                        else if (c == ';')
+                            estado = 10;
+                        else if (c == '&')
+                            estado = 11;
+                        else if (c == '|')
+                            estado = 12;
+                        else if (c == '!')
+                            estado = 13;
+                        else if (c == '<' || c == '>')
                             estado = 16;
-                        else if (c == '+')
+                        else if (c == '<')
                             estado = 17;
-                        else if (c == '-')
+                        else if (c == '+')
                             estado = 19;
+                        else if (c == '-')
+                            estado = 20;
                         else if (c == '/' || c == '*' || c == '%')
-                            estado = 21;
+                            estado = 22;
                         else if (c == '?')
-                            estado = 23;
-                        else if (c == '"')
                             estado = 24;
+                        else if (c == '"')
+                            estado = 25;
                         else
-                            estado = 26;
+                            estado = 27;
                         break;
                     case 1:
                         setClasificacion(Tipos.Identificador);
@@ -125,29 +125,29 @@ namespace LYA1_Lexico2
                             estado = F;
                         break;
                     case 8:
-                        setClasificacion(Tipos.FinSentencia);
-                        estado = F;
-                        break;
-                    case 9:
-                        setClasificacion(Tipos.Caracter);
-                        if (c == '&')
+                        setClasificacion(Tipos.OpAsignacion);
+                        if (c == '=')
                         {
-                            estado = 10;
+                            estado = 9;
                         }
                         else
                         {
                             estado = F;
                         }
                         break;
+                    case 9:
+                        setClasificacion(Tipos.OpRelacional);
+                        estado = F;
+                        break;
                     case 10:
-                        setClasificacion(Tipos.OpLogico);
+                        setClasificacion(Tipos.FinSentencia);
                         estado = F;
                         break;
                     case 11:
                         setClasificacion(Tipos.Caracter);
-                        if (c == '|')
+                        if (c == '&')
                         {
-                            estado = 10;
+                            estado = 14;
                         }
                         else
                         {
@@ -155,8 +155,8 @@ namespace LYA1_Lexico2
                         }
                         break;
                     case 12:
-                        setClasificacion(Tipos.OpRelacional);
-                        if (c == '>' || c == '=')
+                        setClasificacion(Tipos.Caracter);
+                        if (c == '|')
                         {
                             estado = 14;
                         }
@@ -166,10 +166,10 @@ namespace LYA1_Lexico2
                         }
                         break;
                     case 13:
-                        setClasificacion(Tipos.OpRelacional);
+                        setClasificacion(Tipos.OpLogico);
                         if (c == '=')
                         {
-                            estado = 14;
+                            estado = 15;
                         }
                         else
                         {
@@ -177,25 +177,18 @@ namespace LYA1_Lexico2
                         }
                         break;
                     case 14:
-                        setClasificacion(Tipos.OpRelacional);
+                        setClasificacion(Tipos.OpLogico);
                         estado = F;
                         break;
                     case 15:
-                        setClasificacion(Tipos.OpLogico);
-                        if (c == '=')
-                        {
-                            estado = 14;
-                        }
-                        else
-                        {
-                            estado = F;
-                        }
+                        setClasificacion(Tipos.OpRelacional);
+                        estado = F;
                         break;
                     case 16:
-                        setClasificacion(Tipos.OpAsignacion);
+                        setClasificacion(Tipos.OpRelacional);
                         if (c == '=')
                         {
-                            estado = 14;
+                            estado = 18;
                         }
                         else
                         {
@@ -203,8 +196,8 @@ namespace LYA1_Lexico2
                         }
                         break;
                     case 17:
-                        setClasificacion(Tipos.OpTermino);
-                        if (c == '=' || c == '+')
+                        setClasificacion(Tipos.OpRelacional);
+                        if (c == '=' || c == '>')
                         {
                             estado = 18;
                         }
@@ -214,14 +207,14 @@ namespace LYA1_Lexico2
                         }
                         break;
                     case 18:
-                        setClasificacion(Tipos.IncrementoTermino);
+                        setClasificacion(Tipos.OpRelacional);
                         estado = F;
                         break;
                     case 19:
                         setClasificacion(Tipos.OpTermino);
-                        if (c == '=' || c == '-')
+                        if (c == '=' || c == '+')
                         {
-                            estado = 20;
+                            estado = 21;
                         }
                         else
                         {
@@ -229,29 +222,37 @@ namespace LYA1_Lexico2
                         }
                         break;
                     case 20:
-                        setClasificacion(Tipos.IncrementoTermino);
-                        estado = F;
-                        break;
-                    case 21:
-                        setClasificacion(Tipos.OpFactor);
-                        if (c == '=')
+                        setClasificacion(Tipos.OpTermino);
+                        if (c == '=' || c == '-')
                         {
-                            estado = 22;
+                            estado = 21;
                         }
                         else
                         {
                             estado = F;
                         }
                         break;
+                    case 21:
+                        setClasificacion(Tipos.IncrementoTermino);
+                        estado = F;
+                        break;
                     case 22:
+                        setClasificacion(Tipos.OpFactor);
+                        if(c == '='){
+                            estado = 23;
+                        }else{
+                            estado = F;
+                        }
+                        break;
+                    case 23:
                         setClasificacion(Tipos.IncrementoFactor);
                         estado = F;
                         break;
-                    case 23:
+                    case 24:
                         setClasificacion(Tipos.OpTernario);
                         estado = F;
                         break;
-                    case 24:
+                    case 25:
                         setClasificacion(Tipos.Cadena);
                         if (archivo.EndOfStream)
                         {
@@ -259,18 +260,18 @@ namespace LYA1_Lexico2
                         }
                         else if (c == '"')
                         {
-                            estado = 25;
+                            estado = 26;
                         }
                         else
                         {
-                            estado = 24;
+                            estado = 25;
                         }
                         break;
-                    case 25:
+                    case 26:
                         setClasificacion(Tipos.Cadena);
                         estado = F;
                         break;
-                    case 26:
+                    case 27:
                         setClasificacion(Tipos.Caracter);
                         estado = F;
                         break;
