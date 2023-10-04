@@ -73,6 +73,8 @@ namespace LYA1_Lexico2
                             estado = 24;
                         else if (c == '"')
                             estado = 25;
+                        else if (c == '$')
+                            estado = 28;
                         else
                             estado = 27;
                         break;
@@ -238,9 +240,12 @@ namespace LYA1_Lexico2
                         break;
                     case 22:
                         setClasificacion(Tipos.OpFactor);
-                        if(c == '='){
+                        if (c == '=')
+                        {
                             estado = 23;
-                        }else{
+                        }
+                        else
+                        {
                             estado = F;
                         }
                         break;
@@ -274,6 +279,20 @@ namespace LYA1_Lexico2
                     case 27:
                         setClasificacion(Tipos.Caracter);
                         estado = F;
+                        break;
+                    case 28:
+                        setClasificacion(Tipos.Caracter);
+                        if (char.IsDigit(c))
+                            estado = 29;
+                        else
+                            estado = F;
+                        break;
+                    case 29:
+                        setClasificacion(Tipos.Moneda);
+                        if (char.IsDigit(c))
+                            estado = 29;
+                        else
+                            estado = F;
                         break;
                 }
                 if (estado >= 0)
